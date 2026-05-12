@@ -225,5 +225,8 @@ __marimo__/
 # Logs
 logs/
 
+# Local project skills
+COMMON_PROJECT_SKILLS.md
+
 # Debug scripts
 debug_*.py

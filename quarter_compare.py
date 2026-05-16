@@ -1,22 +1,4 @@
-from __future__ import annotations
-
-import argparse
-import json
-import sys
-from pathlib import Path
-
-PROJECT_ROOT = Path(__file__).resolve().parent
-SRC_ROOT = PROJECT_ROOT / "src"
-if str(SRC_ROOT) not in sys.path:
-    sys.path.insert(0, str(SRC_ROOT))
-
-from energy_data_2026.config_loader import load_env_file, load_yaml_config
-from energy_data_2026.context import AppContext
-from energy_data_2026.flows.quarter_compare import get_profile, run
-from energy_data_2026.logging_config import setup_logger
-
-
-USAGE = """季度能耗对比工具
+"""季度能耗对比工具
 
 用途：
   对比 2026 年与 2025 年指定对象、指定季度的能源成本、综合能耗（标准煤）和二氧化碳排放。
@@ -44,6 +26,26 @@ USAGE = """季度能耗对比工具
   output/{profile}_q{quarter}_comparison.csv
   output/{profile}_q{quarter}_comparison.json
 """
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+SRC_ROOT = PROJECT_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
+from energy_data_2026.config_loader import load_env_file, load_yaml_config
+from energy_data_2026.context import AppContext
+from energy_data_2026.flows.quarter_compare import get_profile, run
+from energy_data_2026.logging_config import setup_logger
+
+
+USAGE = __doc__ or ""
 
 
 def main(argv: list[str] | None = None) -> int:

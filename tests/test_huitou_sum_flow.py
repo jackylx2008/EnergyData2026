@@ -161,6 +161,85 @@ class HuitouSumFlowTests(unittest.TestCase):
             self.assertEqual(sheet["D6"].value, 400)
             workbook.close()
 
+    def test_reads_workbook_paths_from_env_keys(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            source = root / "source.xlsx"
+            target = root / "target.xlsx"
+
+            self._make_source_table_workbook(source, "Source")
+            self._make_target_table_workbook(target, "Target")
+
+            result = run(
+                AppContext(
+                    project_root=root,
+                    env={
+                        "HUITOU_TARGET_FILE": str(target),
+                        "HUITOU_SOURCE_FILE": str(source),
+                    },
+                    config={
+                        "huitou_sum": {
+                            "target_file_key": "HUITOU_TARGET_FILE",
+                            "jobs": [
+                                {
+                                    "sheet_name": "Target",
+                                    "source_files": [
+                                        {"file_key": "HUITOU_SOURCE_FILE", "sheet_name": "Source"},
+                                    ],
+                                }
+                            ],
+                        }
+                    },
+                )
+            )
+
+            self.assertEqual(result.written_cells, 4)
+            workbook = load_workbook(target)
+            self.assertEqual(workbook["Target"]["C5"].value, 100)
+            workbook.close()
+
+    def test_reads_sheet_names_from_env_keys(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            source = root / "source.xlsx"
+            target = root / "target.xlsx"
+
+            self._make_source_table_workbook(source, "Source")
+            self._make_target_table_workbook(target, "Target")
+
+            result = run(
+                AppContext(
+                    project_root=root,
+                    env={
+                        "HUITOU_TARGET_FILE": str(target),
+                        "HUITOU_SOURCE_FILE": str(source),
+                        "HUITOU_TARGET_SHEET": "Target",
+                        "HUITOU_SOURCE_SHEET": "Source",
+                    },
+                    config={
+                        "huitou_sum": {
+                            "target_file_key": "HUITOU_TARGET_FILE",
+                            "jobs": [
+                                {
+                                    "sheet_name_key": "HUITOU_TARGET_SHEET",
+                                    "source_files": [
+                                        {
+                                            "file_key": "HUITOU_SOURCE_FILE",
+                                            "sheet_name_key": "HUITOU_SOURCE_SHEET",
+                                        },
+                                    ],
+                                }
+                            ],
+                        }
+                    },
+                )
+            )
+
+            self.assertEqual(result.written_cells, 4)
+            workbook = load_workbook(target)
+            self.assertEqual(workbook["Target"]["D6"].value, 400)
+            workbook.close()
+
     @staticmethod
     def _make_workbook(path: Path, value: int) -> None:
         workbook = Workbook()

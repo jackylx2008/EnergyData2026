@@ -5,35 +5,35 @@ logging:
 
 huitou_sum:
   # 求和后的结果 Excel 文件。脚本会直接写入该文件并保留原有样式。
-  target_file: D:/CloudStation/国会二期/02 能源工程师/2026年度北辰会投水电气热用量统计表/2026年度_会投_能源消耗和二氧化碳排放量统计台账.xlsx
+  target_file_key: HUITOU_TARGET_FILE
 
   # 每个任务对应 target_file 中的一个 sheet；不同 sheet 可以配置不同数据源。
-  # sheet_name 必须与 target_file 中的工作表名称一致。
-  # source_files 中每个数据源需要配置 file 和该源文件内参与求和的 sheet_name。
+  # sheet_name_key 指向 common.huitou.env 中的目标工作表名称。
+  # source_files 中每个数据源需要配置 file_key 和源文件内参与求和的 sheet_name_key。
   # 只有 1 个 file 时，会把源 sheet 对应数值单元格拷贝到目标 sheet。
   # 有 2 个或更多 file 时，会把源 sheet 对应数值单元格相加后写入目标 sheet。
   jobs:
 
-    - sheet_name: 二期主体总出口
+    - sheet_name_key: HUITOU_TARGET_SHEET_MAIN_TOTAL
       source_files:
-        - file: D:/CloudStation/国会二期/02 能源工程师/2026年度北辰会投水电气热用量统计表/会展分公司/会展分公司统计水电气热月度基础数据（总出口）.xlsx
-          sheet_name: Sheet1
+        - file_key: HUITOU_EXHIBITION_TOTAL_FILE
+          sheet_name_key: HUITOU_SOURCE_SHEET_DEFAULT
 
-    - sheet_name: 会展分公司_不包含写字楼商业含租区
+    - sheet_name_key: HUITOU_TARGET_SHEET_EXHIBITION_EXCLUDING_OFFICE_SHOP
       source_files:
-        - file: D:/CloudStation/国会二期/02 能源工程师/2026年度北辰会投水电气热用量统计表/会展分公司/会展分公司统计水电气热月度基础数据（会展分公司部分）.xlsx
-          sheet_name: Sheet1
+        - file_key: HUITOU_EXHIBITION_EXCLUDING_OFFICE_SHOP_FILE
+          sheet_name_key: HUITOU_SOURCE_SHEET_DEFAULT
 
-    - sheet_name: 商管分公司（不含租区）
+    - sheet_name_key: HUITOU_TARGET_SHEET_B23_EXCLUDING_RENT
       source_files:
-        - file: D:/CloudStation/国会二期/02 能源工程师/2026年度北辰会投水电气热用量统计表/商管分公司/商管分公司统计水电气热月度基础数据（B23商业部分）_不包含租区.xlsx
-          sheet_name: Sheet1
-        - file: D:/CloudStation/国会二期/02 能源工程师/2026年度北辰会投水电气热用量统计表/商管分公司/商管分公司统计水电气热月度基础数据（B23写字楼部分）_不包含租区.xlsx
-          sheet_name: Sheet1
+        - file_key: HUITOU_B23_SHOP_EXCLUDING_RENT_FILE
+          sheet_name_key: HUITOU_SOURCE_SHEET_DEFAULT
+        - file_key: HUITOU_B23_OFFICE_EXCLUDING_RENT_FILE
+          sheet_name_key: HUITOU_SOURCE_SHEET_DEFAULT
 
-    - sheet_name: B23配套总出口
+    - sheet_name_key: HUITOU_TARGET_SHEET_B23_TOTAL
       source_files:
-        - file: D:/CloudStation/国会二期/02 能源工程师/2026年度北辰会投水电气热用量统计表/商管分公司/商管分公司统计水电气热月度基础数据（B23商业部分）_包含租区.xlsx
-          sheet_name: Sheet1
-        - file: D:/CloudStation/国会二期/02 能源工程师/2026年度北辰会投水电气热用量统计表/商管分公司/商管分公司统计水电气热月度基础数据（B23写字楼部分）_包含租区.xlsx
-          sheet_name: Sheet1
+        - file_key: HUITOU_B23_SHOP_FILE
+          sheet_name_key: HUITOU_SOURCE_SHEET_DEFAULT
+        - file_key: HUITOU_B23_OFFICE_FILE
+          sheet_name_key: HUITOU_SOURCE_SHEET_DEFAULT

@@ -29,10 +29,11 @@ EnergyData2026 是一个用于能源数据处理和对比分析的 Python 项目
 常用文件名：
 
 - `common.b23.env`
+- `common.huitou.env`
 - `common.b25b26.env`
 
 `config.yaml` 保存通用折算系数和排放因子等配置。
-`huitou_sum.config.yaml` 保存回投汇总的源 Excel 和结果 Excel 文件位置。
+`huitou_sum.config.yaml` 保存回投汇总的工作表映射；`common.huitou.env` 保存本地源 Excel 和结果 Excel 文件路径。
 
 ## 使用方式
 
@@ -56,23 +57,37 @@ logging:
   file: ./logs/huitou_sum.log
 
 huitou_sum:
-  target_file: D:/path/target.xlsx
+  target_file_key: HUITOU_TARGET_FILE
   jobs:
-    - sheet_name: Sheet1
+    - sheet_name_key: HUITOU_TARGET_SHEET_1
       source_files:
-        - file: D:/path/sheet1_source_a.xlsx
-          sheet_name: SourceSheetA
-        - file: D:/path/sheet1_source_b.xlsx
-          sheet_name: SourceSheetB
-    - sheet_name: Sheet2
+        - file_key: HUITOU_SHEET1_SOURCE_A_FILE
+          sheet_name_key: HUITOU_SOURCE_SHEET_A
+        - file_key: HUITOU_SHEET1_SOURCE_B_FILE
+          sheet_name_key: HUITOU_SOURCE_SHEET_B
+    - sheet_name_key: HUITOU_TARGET_SHEET_2
       source_files:
-        - file: D:/path/sheet2_source_a.xlsx
-          sheet_name: SourceSheetA
-        - file: D:/path/sheet2_source_b.xlsx
-          sheet_name: SourceSheetB
+        - file_key: HUITOU_SHEET2_SOURCE_A_FILE
+          sheet_name_key: HUITOU_SOURCE_SHEET_A
+        - file_key: HUITOU_SHEET2_SOURCE_B_FILE
+          sheet_name_key: HUITOU_SOURCE_SHEET_B
 ```
 
-`jobs` 中每一项对应结果 Excel 的一个工作表。job 的 `sheet_name` 是结果文件里的目标工作表；`source_files` 每一项的 `sheet_name` 是对应源 Excel 文件里的源工作表。
+`common.huitou.env` 示例：
+
+```text
+HUITOU_TARGET_FILE=D:/path/target.xlsx
+HUITOU_SHEET1_SOURCE_A_FILE=D:/path/sheet1_source_a.xlsx
+HUITOU_SHEET1_SOURCE_B_FILE=D:/path/sheet1_source_b.xlsx
+HUITOU_SHEET2_SOURCE_A_FILE=D:/path/sheet2_source_a.xlsx
+HUITOU_SHEET2_SOURCE_B_FILE=D:/path/sheet2_source_b.xlsx
+HUITOU_TARGET_SHEET_1=Sheet1
+HUITOU_TARGET_SHEET_2=Sheet2
+HUITOU_SOURCE_SHEET_A=SourceSheetA
+HUITOU_SOURCE_SHEET_B=SourceSheetB
+```
+
+`jobs` 中每一项对应结果 Excel 的一个工作表。job 的 `sheet_name_key` 指向 `common.huitou.env` 中的目标工作表名称；`source_files` 每一项的 `file_key` 指向源 Excel 文件路径，`sheet_name_key` 指向该源 Excel 文件里的源工作表名称。
 
 回投汇总按源表和目标表的能源类别、指标、月份匹配数据：
 

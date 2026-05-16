@@ -1,3 +1,25 @@
+"""B23 Excel 汇总工具
+
+用途：
+  将 B23 商业部分和 B23 写字楼部分 Excel 工作簿中的数值单元格汇总到 B23 目标工作簿。
+  当前会同时处理“包含租区”和“不包含租区”两个口径。
+
+配置文件：
+  默认读取 common.b23.env。
+  env 文件中配置源 Excel 文件、目标 Excel 文件、日志级别和日志文件。
+
+可选参数：
+  --env-file   指定 B23 env 文件；默认 common.b23.env
+
+示例：
+  python b23_sum.py
+  python b23_sum.py --env-file common.b23.env
+
+输出：
+  脚本会直接写入 env 中配置的目标 Excel 文件，并在控制台输出每个任务的写入单元格数量、
+  跳过的合并单元格数量和目标文件路径。
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -17,7 +39,8 @@ from energy_data_2026.logging_config import setup_logger
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Sum B23 shop and office numeric Excel cells into the B23 total workbook."
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--env-file", default="common.b23.env", help="B23 env file path")
     args = parser.parse_args()

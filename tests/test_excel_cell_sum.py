@@ -10,7 +10,7 @@ from openpyxl.styles import Font, PatternFill
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from energy_data_2026.modules.excel_cell_sum import sum_workbook_numeric_cells
+from energy_data_2026.modules.excel_cell_sum import sum_multiple_workbook_numeric_cells, sum_workbook_numeric_cells
 
 
 class ExcelCellSumTests(unittest.TestCase):
@@ -35,6 +35,29 @@ class ExcelCellSumTests(unittest.TestCase):
             self.assertEqual(sheet["C1"].value, 7)
             self.assertEqual(sheet["A1"].fill.fgColor.rgb, "00FFFF00")
             self.assertTrue(sheet["A1"].font.bold)
+            workbook.close()
+
+    def test_sums_more_than_two_source_workbooks(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            first = root / "first.xlsx"
+            second = root / "second.xlsx"
+            third = root / "third.xlsx"
+            target = root / "target.xlsx"
+
+            self._make_workbook(first, a1=1, b1=2, c1="skip")
+            self._make_workbook(second, a1=3, b1=None, c1=7)
+            self._make_workbook(third, a1=4, b1=5, c1=6)
+            self._make_target(target)
+
+            result = sum_multiple_workbook_numeric_cells((first, second, third), target)
+
+            self.assertEqual(result.written_cells, 3)
+            workbook = load_workbook(target)
+            sheet = workbook.active
+            self.assertEqual(sheet["A1"].value, 8)
+            self.assertEqual(sheet["B1"].value, 7)
+            self.assertEqual(sheet["C1"].value, 13)
             workbook.close()
 
     @staticmethod
